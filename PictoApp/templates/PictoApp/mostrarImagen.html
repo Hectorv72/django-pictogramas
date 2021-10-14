@@ -1,0 +1,59 @@
+{% load static %}
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="{% static 'css/estilos1.css' %}">
+
+    <title>Pictogramas</title>
+</head>
+<body>
+    
+    <div class="container">
+        <table class="aprender">
+            <tr>
+                <td colspan="2"><h1 id="texto">{{ nombre }}</h1></td>
+            </tr>
+            <tr class="centrado">
+                <td><button class="buttonJuego"><img src='/PictoApp/media/iconos/sonido1.png' onclick="Audio()" style="width: 150px;"></button></td>
+                <td><button class="buttonJuego"><img src='/PictoApp/media/iconos/hablar1.png' onclick="Locucion()" style="width: 150px;"></button></td>
+            </tr>
+
+            
+            <tr>
+                <td colspan="2"><img src='{{ Pic.imagen.url }}' class="pictograma2" onclick="Audio()" width="200"></td>
+            </tr>
+            <tr>
+                <td><a href="{% url 'categorias' %}"><button class="buttonJuego">Volver Atras</button></a></td>
+                <td><a href="{% url 'pictogramas' idCategoria %}"><button class="buttonJuego">Siguiente</button></a></td>
+            </tr>
+        </table>
+        <audio id="locucion" autoplay>
+            <source src='{{ Pic.locucion.url }}'>
+        </audio>
+
+        {% if Pic.consonido == 1 %}
+        <audio id="audio">
+            <source src='{{ Pic.sonido.url }}'>
+        </audio>
+        {% endif %}
+    </div>
+
+    <script>
+        function Audio(){
+            var audio = document.getElementById("audio");
+            audio.play();
+        }
+
+        function Locucion(){
+            var locucion = document.getElementById("locucion");
+            locucion.play();
+        }
+
+        //var texto = document.getElementById("texto").textContent;
+        //document.getElementById("texto").textContent = texto.toUpperCase();
+
+    </script>
+</body>
+</html>

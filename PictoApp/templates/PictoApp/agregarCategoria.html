@@ -1,0 +1,53 @@
+{% extends 'PictoApp/abml.html' %}
+{% load static %}
+{% block content %}
+
+<form action="" method="POST" enctype="multipart/form-data">
+<tr>
+        <td colspan="4">
+                <h2>Categorias</h2>
+        </td>
+        {% csrf_token %}
+</tr>
+<tr>
+        <td colspan="3">
+                {{ formulario }}
+        </td>
+</tr>
+<tr>
+        <td colspan="3">
+                <button>Agregar</button>
+        </td>
+</tr>
+{% if val == True %}
+<tr>
+        <td colspan="3">
+                <h3>Se agrego correctamente</h3>
+        </td>
+</tr>
+{% endif %}
+</form>
+<tr>
+        <td colspan="3" style="height: 100px;">
+                <h2>Lista Categorias</h2>
+        </td>
+</tr>
+{% for i in archivos %}
+<tr>
+        <td>
+                <img src="{{ i.cuadro.url }}" style="width: 32px;">
+        </td>
+        <td>
+                <h3>{{ i.nombre }}</h3>
+        </td>
+        <td>
+                <form action="{% url 'eliminarCat' %}" method="POST">
+                {% csrf_token %}
+                <button>Eliminar</button>
+                <input type="number" hidden value="{{ i.id }}" name="catid">
+                </form>
+        </td>
+</tr>
+{% endfor %}
+
+{% endblock %}

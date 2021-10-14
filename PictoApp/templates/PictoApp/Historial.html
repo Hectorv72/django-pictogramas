@@ -1,0 +1,223 @@
+{% load static %}
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="{% static 'css/estilos1.css' %}">
+    <title>Historial</title>
+</head>
+<body>
+    <div class="containerhist">
+        <table style="width: 800px;">
+
+            <tr>
+                <td><h1 id="perdidos">{{ Colores }}Categoria</h1></td>
+                <td><h1 id="ganados">Ganados</h1></td>
+                <td><h1 id="perdidos">Perdidos</h1></td>
+                <td><h1 id="perdidos">Grafico</h1></td>
+            </tr>
+
+
+            {% for i in Puntaje %}
+            <tr>
+                <td><h1 id="perdidos">{{ i.catelegida }}</h1></td>
+                <td><h1 id="ganados">{{ i.aciertos }}</h1></td>
+                <td><h1 id="perdidos">{{ i.errores }}</h1></td>
+                <form  action="{% url 'pie' %}" method="POST">
+                {% csrf_token %}
+                <td><button value="{{ i.id }}" name="grafic">Ver Grafico</button></td>
+                </form>
+            </tr>
+            {% endfor %}
+            <tr style="height: 50px;"></tr>
+            <tr>
+                <td colspan="4"><h1>Desempeño</h1></td>
+            </tr>
+            <tr>
+                <td colspan="4"><canvas id="canvas1"></canvas></td>
+            </tr>
+            <tr>
+                <td colspan="4" id="leyenda1" class="leyenda"></td>
+            </tr>
+        </table>
+
+        <table style="width: 500px;">
+            <tr>
+                <td colspan="4"><a href="{% url 'home' %}"><button class="buttonHome" style="width: 250px;">Volver al Menu</button></a></td>
+            </tr>
+        </table>
+    </div>
+    <footer></footer>
+    <script>
+        var cont,colores;
+        document.ready = cont = -1;
+        document.ready = colores = [];
+        /**
+         * Clase para generar graficos de pastel
+         * Tiene que recibir:
+         *	el id del canvas
+         *	la anchura y altura del canvas
+         *	un array con los valores a mostrar del tipo:
+         *		var valores={
+         *			"Access":	{valor:10,color:"blue"},
+         *			"PHP":		{valor:23,color:"red"},
+         *			"Python":	{valor:18,color:"green"},
+         *			".NET":		{valor:12,color:"Orange"},
+         *			"C++":		{valor:30,color:"Cyan"}
+         *		}
+         */
+        var miPastel=function(canvasId,width,height,valores) {
+            this.canvas=document.getElementById(canvasId);;
+            this.canvas.width=width;
+            this.canvas.height=height;
+            this.radio=Math.min(this.canvas.width/2,this.canvas.height/2)
+            this.context=this.canvas.getContext("2d");
+            this.valores=valores;
+            this.tamanoDonut=0;
+         
+            /**
+             * Dibuja un gráfico de pastel
+             */
+            this.dibujar=function() {
+                this.total=this.getTotal();
+                var valor=0;
+                var inicioAngulo=0;
+                var angulo=0;
+         
+                // creamos los quesos del pastel
+                for(var i in this.valores)
+                {
+                    valor=valores[i]["valor"];
+                    color=valores[i]["color"];
+                    angulo=2*Math.PI*valor/this.total;
+         
+                    this.context.fillStyle=color;
+                    this.context.beginPath();
+                    this.context.moveTo(this.canvas.width/2, this.canvas.height/2);
+                    this.context.arc(this.canvas.width/2, this.canvas.height/2, this.radio, inicioAngulo, (inicioAngulo+angulo));
+                    this.context.closePath();
+                    this.context.fill();
+                    inicioAngulo+=angulo;
+                }
+            }
+         
+         
+            /**
+             * Pone el tanto por ciento de cada uno de los valores
+             * Tiene que recibir:
+             *	el color del texto
+             */
+            this.ponerPorCiento=function(color){
+                var valor=0;
+                var etiquetaX=0;
+                var etiquetaY=0;
+                var inicioAngulo=0;
+                var angulo=0;
+                var texto="";
+                var incrementar=0;
+         
+                // si hemos dibujado un donut, tenemos que incrementar el valor del radio
+                // para que quede centrado
+                if(this.tamanoDonut)
+                    incrementar=(this.radio*this.tamanoDonut)/2;
+         
+                this.context.font="bold 12pt Calibri";
+                this.context.fillStyle=color;
+                for(var i in this.valores)
+                {
+                    valor=valores[i]["valor"];
+                    angulo=2*Math.PI*valor/this.total;
+         
+                    // calculamos la posición del texto
+                    etiquetaX=this.canvas.width/2+(incrementar+this.radio/2)*Math.cos(inicioAngulo+angulo/2);
+                    etiquetaY=this.canvas.height/2+(incrementar+this.radio/2)*Math.sin(inicioAngulo+angulo/2);
+         
+                    texto=Math.round(100*valor/this.total);
+         
+                    // movemos la posición unos pixels si estamos en la parte izquierda
+                    // del pastel para que quede mas centrado
+                    if(etiquetaX<this.canvas.width/2)
+                        etiquetaX-=10;
+         
+                    // ponemos los valores
+                    this.context.beginPath();
+                    this.context.fillText(texto+"%", etiquetaX, etiquetaY);
+                    this.context.stroke();
+         
+                    inicioAngulo+=angulo;
+                }
+            }
+         
+            /**
+             * Function que devuelve la suma del total de los valores recibidos en el array
+             */
+            this.getTotal=function() {
+                var total=0;
+                for(var i in this.valores)
+                {
+                    total+=valores[i]["valor"];
+                }
+                return total;
+            }
+         
+            /**
+             * Función que devuelve una lista (<ul><li>) con la leyenda
+             * Tiene que recibir el id donde poner la leyenda
+             */
+            this.ponerLeyenda=function(leyendaId) {
+                var codigoHTML="<ul class='leyenda'>";
+         
+                for(var i in this.valores)
+                {
+                    codigoHTML+="<li><span style='background-color:"+valores[i]["color"]+"'></span>"+i+"</li>";
+                }
+                codigoHTML+="</ul>";
+                document.getElementById(leyendaId).innerHTML=codigoHTML;
+            }
+        }
+        //var colores = ["#F6B300","#F63F00","#B700F6","#2DF600","#F600F2","#00F68A","8E00F6","#00D8F6","F60059"];
+        
+        //console.log(colores[Math.random(colores.length-1)]);
+        // definimos los valores de nuestra gráfica
+        var valores={
+            {% for i in Puntaje %}
+            "{{ i.catelegida }}":{valor:{{ i.aciertos }},color:colores[generar_color()]},
+            {% endfor %}
+        }
+
+        function selecColor(){
+            cont += 1
+            console.log(cont)
+            return cont
+        }
+
+        function generar_color(){
+            hexadecimal = new Array("0","1","2","3","4","5","6","7","8","9","A","B","C","D","E","F")
+            color_aleatorio = "#";
+            for (i=0;i<6;i++){
+                posarray = aleatorio(0,hexadecimal.length)
+                color_aleatorio += hexadecimal[posarray]
+            }
+            colores.push(color_aleatorio);
+            return selecColor();
+        }
+
+        function aleatorio(inferior,superior){
+            numPosibilidades = superior - inferior
+            aleat = Math.random() * numPosibilidades
+            aleat = Math.floor(aleat)
+            return parseInt(inferior) + aleat
+        }
+        console.log(colores)
+
+         
+        // generamos el primer pastel
+        var pastel=new miPastel("canvas1",300,300,valores);
+        pastel.dibujar();
+        pastel.ponerPorCiento("white");
+        pastel.ponerLeyenda("leyenda1");
+        
+        </script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+{% extends 'PictoApp/home.html' %}
+{% load static %}
+{% block content %}
+<div class="contedor">
+    <div id="centrado">
+        {% for img in base %}
+            <h2>{% img.titulo %}</h2>
+            <img src='{{ img.imagen.url }}'>
+            <img src='PictoApp\media\imagenes\caballo.png'>
+
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

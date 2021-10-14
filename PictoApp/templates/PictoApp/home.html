@@ -1,0 +1,60 @@
+{% load static %}
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="{% static 'css/estilos1.css' %}">
+    
+    <title>PictoJuegos</title>
+</head>
+<body class="home" onload="iniciar()">
+    <div class="container">
+        <table>
+            <tr>
+			<td>
+				<img onclick="admin()" class="buttonHome" src='/PictoApp/media/iconos/logo.png'">
+			</td>
+		    </tr>
+
+            <tr>
+                <td><a href="{% url 'categorias'%}"><button class="buttonHome">APRENDER</button></a></td>
+            </tr>
+            <tr>
+                <td><a href="{% url 'categoriasJuego'%}"><button class="buttonHome">JUGAR</button></a></td>
+            </tr>
+
+            <tr>
+                <td><a href="{% url 'historial'%}"><button class="buttonHome">HISTORIAL</button></a></td>
+            </tr>
+        </table>
+    </div>
+    
+    <footer></footer>
+    <script>
+        var secreto;
+        /* function iniciar(){
+            secreto = 0;
+        }
+        */
+        
+        function admin(){
+            //secreto += 1;
+            /*console.log(secreto);
+            if (secreto == 3){
+            */
+            var acceso = window.confirm("¿Entrar al menu para agregar Pictogramas?");
+            if (acceso == true){
+                    document.location.href = "{% url 'abml' %}";
+                }
+            /* iniciar();
+                if (acceso == true){
+                    document.write("lol");
+                }
+            }
+            */
+        }
+
+    </script>
+</body>
+</html>

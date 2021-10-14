@@ -1,0 +1,15 @@
+{% extends 'PictoApp/abml.html' %}
+{% load static %}
+{% block content %}
+{% csrf_token %}
+    <tr>
+        <td>
+            <h1>{{ verif }}</h1>
+        </td>
+    </tr>
+    <tr>
+            <td style="height: 50px;">
+                <a href="{% url 'agregarCat' %}">Volver</a>
+            </td>
+        </tr>   
+{% endblock %}

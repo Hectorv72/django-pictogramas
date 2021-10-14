@@ -1,0 +1,10 @@
+{% extends 'PictoApp/abml.html' %}
+{% load static %}
+{% block content %}
+{% csrf_token %}
+    <tr>
+        <td>
+            <h1>{{ verif }}</h1>
+        </td>
+    </tr>    
+{% endblock %}

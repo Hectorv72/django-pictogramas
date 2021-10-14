@@ -1,0 +1,23 @@
+{% extends 'PictoApp/abml.html' %}
+{% load static %}
+{% block content %}
+
+<form action="" method="POST" enctype="multipart/form-data">
+{% csrf_token %}
+{{ formulario }}
+
+{% if val == True %}
+<tr>
+        <td colspan="2">
+                <h2>Se guardo exitosamente</h2>
+        </td>
+</tr>
+{% endif %}
+
+<tr>
+        <td colspan="2">
+                <button>Agregar</button>
+        </td>
+</tr>
+</form>
+{% endblock %}

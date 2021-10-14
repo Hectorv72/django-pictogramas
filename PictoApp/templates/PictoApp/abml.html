@@ -1,0 +1,40 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="{% static 'css/estilos1.css' %}">
+    <title>ABML</title>
+</head>
+<body>
+    <div class="container">
+    <table style="width: 100%; height: 140px;" class="abml">
+        <tr>
+            <td colspan="4">
+                <a href= "{% url 'logout' %}" >Cerrar Sesion</a>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <a href= "{% url 'agregar' %}" >Agregar</a>
+            </td>
+            <td>
+                <a href= "{% url 'eliminar' %}" >Eliminar</a>
+            </td>
+            <td>
+                <a href= "{% url 'modificar' %}" >Modificar</a>
+            </td>
+            <td>
+                <a href= "{% url 'agregarCat' %}" >Categoria</a>
+            </td>
+        </tr>
+    </table>
+    <table  class="abml">
+        {% block content %}{% endblock %}
+    </table>
+    </div>
+    
+</body>
+</html>

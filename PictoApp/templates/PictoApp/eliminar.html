@@ -1,0 +1,31 @@
+{% extends 'PictoApp/abml.html' %}
+{% load static %}
+{% block content %}
+
+<form action="" method="POST">
+<tr>
+        <td colspan="4">
+                <h2>Pictogramas</h2>
+        </td>
+{% csrf_token %}
+{% for i in formulario %}
+</tr>
+        <td>
+                <img src="{{ i.imagen.url }}" style="width: 32px;">
+        </td>
+        <td>
+                <h3>{{ i.titulo }}</h3>
+        </td>
+        <td>
+                <h3>{{ i.categoria }}</h3>
+        </td>
+        <td>
+                <input type="number" value="{{ i.id }}" hidden name="pictoid">
+                <button>Eliminar</button>
+        </td>
+</tr>
+{% endfor %}
+
+</form>
+
+{% endblock %}

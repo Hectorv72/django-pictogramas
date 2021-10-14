@@ -1,0 +1,38 @@
+{% extends 'PictoApp/abml.html' %}
+{% load static %}
+{% block content %}
+<form name="mod" action="" method="POST">
+<tr>
+        <td>
+                <h3>Pictograma</h3>
+        </td>
+        <td>
+        {% csrf_token %}
+        <select class="modif" name="pictogramas">
+        {% for i in combo %}
+                <option value="{{ i.id }}" >{{ i.titulo }}</option>
+        {% endfor %}
+        </select>
+        </td>
+        <td colspan="2">
+                <button class="but" >Buscar</button>
+        </td>
+</form>
+{% if validar == True %}
+<form action="{% url 'modificar_ejec' %}" method="POST" enctype="multipart/form-data" >
+        {% csrf_token %}
+        <tr>
+                <td> <input type="number" name="idpic" hidden value="{{ idpic }}"> </td>
+                <td> {{ formulario }} </td>
+        </tr>
+        <tr>
+                <td colspan="3"><button>Guardar cambios</button></td>
+        </tr>
+</form>
+{% endif %}
+<script>
+    document.ready = document.getElementById("id_titulo").value = '{{ tablas.titulo }}';
+    document.ready = document.getElementById("id_consonido").value = '{{ tablas.consonido }}';
+    document.ready = document.getElementById("id_categoria").value = '{{ tablas.categoria_id }}';
+</script>
+{% endblock %}
